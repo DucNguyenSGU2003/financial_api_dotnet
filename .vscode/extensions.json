@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "patcx.vscode-nuget-gallery"
+    ]
+}
