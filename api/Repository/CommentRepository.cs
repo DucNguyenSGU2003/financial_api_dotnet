@@ -13,11 +13,21 @@ namespace api.Repository
     public class CommentRepository : ICommentRepository
     {
         private readonly ApplicationDBContext _context;
-        
+
 
         public CommentRepository(ApplicationDBContext context)
         {
             this._context = context;
+        }
+
+
+
+
+        public async Task<Comment> CreateAsync(Comment CommentModel)
+        {
+            await _context.Comments.AddAsync(CommentModel);
+            await _context.SaveChangesAsync();
+            return CommentModel;
         }
 
         public async Task<List<Comment>> GetAllAsync()
