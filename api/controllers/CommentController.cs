@@ -24,15 +24,22 @@ namespace api.controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+
             var comments = await _commentRepo.GetAllAsync();
             var commentDto = comments.Select(s => s.ToCommentDto());
             return Ok(commentDto);
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            
+            if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+            
             var comment = await _commentRepo.GetByIdAsync(id);
             if (comment == null)
             {
@@ -41,9 +48,13 @@ namespace api.controllers
             return Ok(comment.ToCommentDto());
         }
 
-        [HttpPost("{stockId}")]
+        [HttpPost("{stockId:int}")]
         public async Task<IActionResult> Create ([FromRoute] int stockId , CreateCommentDto CommentDto)
         {
+            
+            if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+            
             if(!await _stockRepo.StockExists(stockId))
             {
                 return BadRequest("Stock does not exist!");
@@ -57,7 +68,7 @@ namespace api.controllers
 
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Update ([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
         {
             var comment = await this._commentRepo.UpdateAsync(id,updateDto.ToCommentFromUpdate(id));
@@ -72,9 +83,13 @@ namespace api.controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
+            
+            if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+            
             var commentModel = await  _commentRepo.DeleteAsync(id);
 
             if(commentModel == null)
