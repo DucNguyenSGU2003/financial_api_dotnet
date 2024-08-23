@@ -8,6 +8,7 @@ using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,7 @@ namespace api.controllers
 
         // get all stocks
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
 

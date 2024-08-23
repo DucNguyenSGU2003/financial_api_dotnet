@@ -15,7 +15,7 @@ namespace api.Data
         public ApplicationDBContext(DbContextOptions dbContextOptions)
         : base(dbContextOptions)
         {
-            
+
         }
 
         public DbSet<Stock> Stocks { get; set; }
@@ -35,7 +35,10 @@ namespace api.Data
                     NormalizedName = "USER"
                 }
             };
+
             builder.Entity<IdentityRole>().HasData(roles);
         }
+
+        
     }
 }
