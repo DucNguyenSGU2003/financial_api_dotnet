@@ -25,6 +25,22 @@ namespace api.Data
         {
             base.OnModelCreating(builder);
 
+            //portfolio many-to-many
+            builder.Entity<Portfolio>(x=> x.HasKey(p => new {p.AppUserId,p.StockId}));
+
+            builder.Entity<Portfolio>()
+            .HasOne(u=>u.AppUser)
+            .WithMany(u => u.portfolios)
+            .HasForeignKey(p => p.AppUserId);
+            
+            builder.Entity<Portfolio>()
+            .HasOne(u=> u.Stock)
+            .WithMany (u => u.portfolios)
+            .HasForeignKey(p => p.StockId);
+
+
+
+
             List<IdentityRole> roles = new List<IdentityRole>{
                 new IdentityRole{
                     Name = "Admin",
