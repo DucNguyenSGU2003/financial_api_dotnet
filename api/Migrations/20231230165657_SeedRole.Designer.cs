@@ -12,15 +12,15 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240824045117_portfolio")]
-    partial class portfolio
+    [Migration("20231230165657_SeedRole")]
+    partial class SeedRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -54,13 +54,13 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1c9251ea-cd6f-4766-a602-def73e1c7edb",
+                            Id = "79f392bf-21e3-4e59-a899-f2a066f3884a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e7a98f2b-61e3-4618-a673-0790dd5ab089",
+                            Id = "5849bcbd-fa3c-46ad-8ac1-00ff8cd9a6d7",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -266,21 +266,6 @@ namespace api.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("api.Models.Portfolio", b =>
-                {
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("StockId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppUserId", "StockId");
-
-                    b.HasIndex("StockId");
-
-                    b.ToTable("Portfolios");
-                });
-
             modelBuilder.Entity("api.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -375,35 +360,9 @@ namespace api.Migrations
                     b.Navigation("Stock");
                 });
 
-            modelBuilder.Entity("api.Models.Portfolio", b =>
-                {
-                    b.HasOne("api.Models.AppUser", "AppUser")
-                        .WithMany("portfolios")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("api.Models.Stock", "Stock")
-                        .WithMany("portfolios")
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Stock");
-                });
-
-            modelBuilder.Entity("api.Models.AppUser", b =>
-                {
-                    b.Navigation("portfolios");
-                });
-
             modelBuilder.Entity("api.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("portfolios");
                 });
 #pragma warning restore 612, 618
         }

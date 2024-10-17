@@ -7,7 +7,7 @@
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class portfolio : Migration
+    public partial class complete : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,12 +15,19 @@ namespace api.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "05a4f5a9-5c82-4cb9-969d-95e9e9c8bb4c");
+                keyValue: "5849bcbd-fa3c-46ad-8ac1-00ff8cd9a6d7");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "ebba8984-892b-4d79-bdf8-e710ccd2d2e0");
+                keyValue: "79f392bf-21e3-4e59-a899-f2a066f3884a");
+
+            migrationBuilder.AddColumn<string>(
+                name: "AppUserId",
+                table: "Comments",
+                type: "nvarchar(450)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.CreateTable(
                 name: "Portfolios",
@@ -51,39 +58,64 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1c9251ea-cd6f-4766-a602-def73e1c7edb", null, "Admin", "ADMIN" },
-                    { "e7a98f2b-61e3-4618-a673-0790dd5ab089", null, "User", "USER" }
+                    { "0d8b279d-b9f5-4250-bb59-ead8e1d4f41d", null, "User", "USER" },
+                    { "5802ce4c-72ec-4854-8ac5-f7fe91b32055", null, "Admin", "ADMIN" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_AppUserId",
+                table: "Comments",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Portfolios_StockId",
                 table: "Portfolios",
                 column: "StockId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Comments_AspNetUsers_AppUserId",
+                table: "Comments",
+                column: "AppUserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_AspNetUsers_AppUserId",
+                table: "Comments");
+
             migrationBuilder.DropTable(
                 name: "Portfolios");
 
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "1c9251ea-cd6f-4766-a602-def73e1c7edb");
+            migrationBuilder.DropIndex(
+                name: "IX_Comments_AppUserId",
+                table: "Comments");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "e7a98f2b-61e3-4618-a673-0790dd5ab089");
+                keyValue: "0d8b279d-b9f5-4250-bb59-ead8e1d4f41d");
+
+            migrationBuilder.DeleteData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "5802ce4c-72ec-4854-8ac5-f7fe91b32055");
+
+            migrationBuilder.DropColumn(
+                name: "AppUserId",
+                table: "Comments");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "05a4f5a9-5c82-4cb9-969d-95e9e9c8bb4c", null, "User", "USER" },
-                    { "ebba8984-892b-4d79-bdf8-e710ccd2d2e0", null, "Admin", "ADMIN" }
+                    { "5849bcbd-fa3c-46ad-8ac1-00ff8cd9a6d7", null, "User", "USER" },
+                    { "79f392bf-21e3-4e59-a899-f2a066f3884a", null, "Admin", "ADMIN" }
                 });
         }
     }

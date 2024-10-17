@@ -7,20 +7,16 @@ using api.Dtos.Stock;
 using api.Helpers;
 using api.Interfaces;
 using api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace api.Repository
 {
     public class StockRepository : IStockRepository
-
     {
         private readonly ApplicationDBContext _context;
-
-        public StockRepository(ApplicationDBContext Context)
+        public StockRepository(ApplicationDBContext context)
         {
-            this._context = Context;
+            _context = context;
         }
 
         public async Task<Stock> CreateAsync(Stock stockModel)
@@ -32,7 +28,7 @@ namespace api.Repository
 
         public async Task<Stock?> DeleteAsync(int id)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (stockModel == null)
             {
@@ -41,13 +37,13 @@ namespace api.Repository
 
             _context.Stocks.Remove(stockModel);
             await _context.SaveChangesAsync();
-
             return stockModel;
         }
 
         public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
-            var stocks = this._context.Stocks.Include(c => c.Comments).AsQueryable();
+            var stocks = _context.Stocks.Include(c => c.Comments).ThenInclude(a => a.AppUser).AsQueryable();
+
             if (!string.IsNullOrWhiteSpace(query.CompanyName))
             {
                 stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
@@ -66,7 +62,8 @@ namespace api.Repository
                 }
             }
 
-            var skipNumber = (query.PageNumber - 1)*query.PageSize;
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
 
             return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
@@ -74,6 +71,11 @@ namespace api.Repository
         public async Task<Stock?> GetByIdAsync(int id)
         {
             return await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<Stock?> GetBySymbolAsync(string symbol)
+        {
+            return await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
 
         public Task<bool> StockExists(int id)
